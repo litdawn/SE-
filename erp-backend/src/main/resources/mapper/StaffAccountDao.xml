@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.staffDao.StaffAccountDao">
+    <insert id="saveAccount" parameterType="StaffInformationPO">
+        insert into staff_information (staff_id, `name`, gender, birth_day,phone_number,role,basic_amount,position_amount,level,payment_calculation,payment_schedule,staff_bank_account)
+        values (#{staffId},#{name},#{gender},#{birthDay},#{phoneNumber},#{role},#{basicAmount},#{positionAmount},#{level},#{paymentCalculation},#{paymentSchedule},#{staffBankAccount})
+    </insert>
+
+    <select id="findById" resultType="com.nju.edu.erp.model.po.staff.StaffInformationPO">
+        select * from staff_information where staff_id=#{staffId}
+    </select>
+
+    <update id="changeInfo">
+        update staff_information
+        set `name` = #{name}, gender = #{gender}, birth_day = #{birthDay}, phone_number = #{phoneNumber}, role = #{role}, basic_amount = #{basicAmount}, position_amount = #{positionAmount},level = #{level},payment_schedule = #{paymentSchedule},staff_bank_account = #{staffBankAccount}
+        where staff_id = #{staffId}
+    </update>
+
+    <select id="findAll" resultType="com.nju.edu.erp.model.po.staff.StaffInformationPO">
+        select * from staff_information
+    </select>
+
+    <resultMap id="StaffInformationPO" type="com.nju.edu.erp.model.po.staff.StaffInformationPO">
+        <result column="staff_id" property="staffId"></result>
+        <result column="name" property="name"></result>
+        <result column="gender" property="gender"></result>
+        <result column="birth_day" property="birthDay"></result>
+        <result column="phone_number" property="phoneNumber"></result>
+        <result column="role" property="role"></result>
+        <result column="basic_amount" property="basicAmount"></result>
+        <result column="position_amount" property="positionAmount"></result>
+        <result column="level" property="level"></result>
+        <result column="payment_calculation" property="paymentCalculation"></result>
+        <result column="payment_schedule" property="paymentSchedule"></result>
+        <result column="staff_bank_account" property="staffBankAccount"></result>
+    </resultMap>
+</mapper>

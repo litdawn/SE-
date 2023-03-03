@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.staffDao.SalarySheetDao">
+    <insert id="saveSheet" parameterType="SalarySheetPO">
+        insert into salary_sheet (id, staff_id, `name`, `role`, operator,basic_amount,position_amount,absence_times,annual_bonus,raw_amount,tax_amount,push_money,final_amount,payment_schedule,`state`, create_time,staff_bank_account)
+        values (#{id},#{staffId},#{name},#{role},#{operator},#{basicAmount},#{positionAmount},#{absenceTimes},#{annualBonus},#{rawAmount},#{taxAmount},#{pushMoney},#{finalAmount},#{paymentSchedule},#{state}, #{createTime},#{staffBankAccount})
+    </insert>
+    <update id="updateSheetState">
+        update salary_sheet
+        set `state` = #{state}
+        where id = #{sheetId}
+    </update>
+
+    <update id="makeSalaryRule">
+        update staff_information
+        set payment_schedule = #{rule}
+        where staff_id = #{staffId}
+    </update>
+
+    <update id="updateSheetAbsence">
+        update salary_sheet
+        set `absence_times` = #{absenceTimes}
+        where id = #{sheetId}
+    </update>
+
+    <select id="getLatestSheet" resultMap="SalarySheetPO">
+        select * from salary_sheet order by id desc limit 0,1 ;
+    </select>
+    <select id="findAllSheet" resultType="com.nju.edu.erp.model.po.staff.SalarySheetPO">
+        select * from salary_sheet;
+    </select>
+    <select id="findAllByState" resultType="com.nju.edu.erp.model.po.staff.SalarySheetPO">
+        select * from salary_sheet where state = #{state}
+    </select>
+    <select id="findSheetById" resultType="com.nju.edu.erp.model.po.staff.SalarySheetPO">
+        select * from salary_sheet where id=#{id}
+    </select>
+
+    <!--(经营历程表)-->
+    <select id="findSalarySheet" resultType="com.nju.edu.erp.model.po.staff.SalarySheetPO">
+        select * from salary_sheet where create_time>=#{startTime} and create_time&lt;=#{endTime} and staff_id = #{staffId} and operator = #{salesman};
+    </select>
+
+    <!--经营情况-->
+    <select id="findAllByTime" resultType="com.nju.edu.erp.model.po.staff.SalarySheetPO">
+        <![CDATA[select * from salary_sheet where create_time>=#{startTime} and create_time<=#{endTime}]]>;
+    </select>
+
+    <!--年终奖-->
+    <select id="findSheetByIdTime" resultType="com.nju.edu.erp.model.po.staff.SalarySheetPO">
+        select * from salary_sheet
+        where staff_id=#{staffId} and YEAR(create_time) = #{year}
+    </select>
+
+    <resultMap id="SalarySheetPO" type="com.nju.edu.erp.model.po.staff.SalarySheetPO">
+        <id column="id" property="id"></id>
+        <result column="staff_id" property="staffId"></result>
+        <result column="name" property="name"></result>
+        <result column="role" property="role"></result>
+        <result column="operator" property="operator"></result>
+        <result column="basic_amount" property="basicAmount"></result>
+        <result column="position_amount" property="positionAmount"></result>
+        <result column="staff_bank_account" property="staffBankAccount"></result>
+        <result column="raw_amount" property="rawAmount"></result>
+        <result column="tax_amount" property="taxAmount"></result>
+        <result column="push_money" property="pushMoney"></result>
+        <result column="absence_times" property="absenceTimes"></result>
+        <result column="annual_bonus" property="annualBonus"></result>
+        <result column="final_amount" property="finalAmount"></result>
+        <result column="payment_schedule" property="paymentSchedule"></result>
+        <result column="state" property="state"></result>
+        <result column="create_time" property="createTime"></result>
+    </resultMap>
+</mapper>

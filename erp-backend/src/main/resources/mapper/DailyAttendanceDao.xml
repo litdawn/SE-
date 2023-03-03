@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.staffDao.DailyAttendanceDao">
+
+    <insert id="AttendanceRegister" parameterType="AttendancePO" useGeneratedKeys="true" keyProperty="id">
+        insert into attendance_sheet (`name`, staff_id,`role`,`date`)
+        values (#{name},#{staffId},#{role},#{date})
+    </insert>
+
+    <select id="findOne" resultMap="AttendancePO">
+        select * from attendance_sheet
+        where `date` BETWEEN #{beginDate} AND #{endDate}
+            AND staff_id =#{staffId}
+    </select>
+
+    <select id="findAll" resultMap="AttendancePO">
+        select * from attendance_sheet
+        where `date` BETWEEN #{beginDate} AND #{endDate}
+    </select>
+
+    <select id="doesThisDayHeAttend" resultMap="AttendancePO">
+        select * from attendance_sheet
+        where staff_id=#{staffId}
+          AND `date` BETWEEN #{beginDate} AND #{endDate}
+    </select>
+
+    <select id="findIdByName" resultType="java.lang.String">
+        select `staff_id` from staff_information
+        where `name` = #{name}
+    </select>
+
+<!--    <update id="updateById" parameterType="CategoryPO">-->
+<!--        update category-->
+<!--        <set>-->
+<!--            <if test = "name != null">`name` = #{name}, </if>-->
+<!--            <if test = "isLeaf != null">is_leaf = #{isLeaf}, </if>-->
+<!--            <if test = "itemCount != null">item_count = #{itemCount}, </if>-->
+<!--            <if test = "itemIndex != null">item_index = #{itemIndex}, </if>-->
+<!--        </set>-->
+<!--        where id = #{id}-->
+<!--    </update>-->
+
+<!--    <delete id="deleteById">-->
+<!--        delete from category where id = #{id}-->
+<!--    </delete>-->
+
+    <resultMap id="AttendancePO" type="com.nju.edu.erp.model.po.staff.AttendancePO">
+        <id column="staff_id" property="staffId"></id>
+        <result column="name" property="name"></result>
+        <result column="role" property="role"></result>
+        <result column="date" property="date"></result>
+    </resultMap>
+
+</mapper>

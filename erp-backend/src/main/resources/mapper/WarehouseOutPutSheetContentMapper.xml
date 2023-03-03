@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.warehouseDao.WarehouseOutputSheetDao">
+
+    <select id="findByPidOrderBySalePricePos" resultType="com.nju.edu.erp.model.po.warehouse.WarehouseOutputSheetContentPO">
+        select * from warehouse_output_sheet_content where pid = #{pid} and quantity > 0 order by sale_price asc;
+    </select>
+
+    <resultMap id="WarehouseOutputSheetContentPO" type="com.nju.edu.erp.model.po.warehouse.WarehouseOutputSheetContentPO">
+        <id column="id" property="id"></id>
+        <result column="pid" property="pid"></result>
+        <result column="wo_id" property="woId"></result>
+        <result column="batch_id" property="batchId"></result>
+        <result column="quantity" property="quantity"></result>
+        <result column="sale_price" property="salePrice"></result>
+        <result column="remark" property="remark"></result>
+    </resultMap>
+</mapper>

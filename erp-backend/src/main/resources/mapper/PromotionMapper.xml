@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.saleDao.PromotionDao">
+<!--    <update id="updateById" parameterType="ProductPO">-->
+<!--        update product-->
+<!--        <set>-->
+<!--            <if test="name != null">`name` = #{name}, </if>-->
+<!--            <if test="type != null">`type` = #{type}, </if>-->
+<!--            <if test="quantity != null">quantity = #{quantity},</if>-->
+<!--            <if test="purchasePrice != null">purchase_price = #{purchasePrice},</if>-->
+<!--            <if test="retailPrice != null">retail_price = #{retailPrice},</if>-->
+<!--            <if test="recentPp != null">recent_pp = #{recentPp},</if>-->
+<!--            <if test="recentRp != null">recent_rp = #{recentRp},</if>-->
+<!--        </set>-->
+<!--        where id = #{id}-->
+<!--    </update>-->
+
+    <insert id = "addVoucher" parameterType="PromotionPO">
+        insert into promotion (id, kind,rule, level, amount, composition1_id,composition2_id,begin_date, end_date,voucher)
+        values (#{id}, #{kind}, #{rule}, #{level}, #{amount}, #{composition1Id},#{composition2Id},#{beginDate}, #{endDate},#{voucher})
+    </insert>
+
+    <insert id = "addDiscount" parameterType="PromotionPO">
+        insert into promotion (id, `kind`,rule, level, amount, composition1_id,composition2_id,begin_date, end_date,discount)
+        values (#{id}, #{kind}, #{rule}, #{level}, #{amount}, #{composition1Id},#{composition2Id},#{beginDate}, #{endDate},#{discount})
+    </insert>
+
+    <insert id = "addGift" parameterType="PromotionPO">
+        insert into promotion (id, `kind`,rule, level, amount, composition1_id,composition2_id,begin_date, end_date,gift_id,gift_quantity)
+        values (#{id}, #{kind}, #{rule}, #{level}, #{amount},#{composition1Id},#{composition2Id},#{beginDate}, #{endDate}, #{giftId},#{giftQuantity})
+    </insert>
+
+    <select id = "findById" resultMap="PromotionPO">
+        select * from promotion where id = #{id}
+    </select>
+
+    <select id = "findVoucherDESC" resultMap="PromotionPO">
+        select *
+        from promotion
+        where `kind` = '代金券'
+          AND #{date} BETWEEN `begin_date` AND `end_date`
+          AND (#{level} >= level
+            OR #{amount} >= amount)
+        ORDER BY voucher DESC
+        limit 0,1
+    </select>
+
+<!--    <select id = "findVoucherDESCByTimeAndAmount" resultMap="PromotionPO">-->
+<!--        select * from promotion-->
+<!--        where `kind` = '代金券'-->
+<!--          AND #{date} BETWEEN `begin_date` AND `end_date`-->
+<!--          AND #{amount} >= `amount`-->
+<!--        ORDER BY voucher DESC-->
+<!--        limit 0,1-->
+<!--    </select>-->
+
+<!--    <select id = "findVoucherDESCByTime" resultMap="PromotionPO">-->
+<!--        select * from promotion-->
+<!--        where `kind` = '代金券'-->
+<!--        AND #{date} BETWEEN `begin_date` AND `end_date`-->
+<!--        ORDER BY voucher DESC-->
+<!--    </select>-->
+
+    <select id="findCompositionDiscountASC" resultMap="PromotionPO">
+        select *
+        from promotion
+        where `kind` = '代金券'
+          AND rule = '商品组合'
+          AND #{date} BETWEEN `begin_date` AND `end_date`
+          AND composition1_id in (SELECT distinct pid
+                                  FROM sale_sheet_content
+                                  WHERE sale_sheet_id = #{sheetId})
+          AND composition2_id in (SELECT distinct pid
+                                  FROM sale_sheet_content
+                                  WHERE sale_sheet_id = #{sheetId})
+        ORDER BY voucher DESC
+        limit 0,1
+    </select>
+
+    <select id="findDiscountASCByTimeAndLevel" resultMap="PromotionPO">
+        select *
+        from promotion
+        where `kind` = '折扣'
+          AND #{date} BETWEEN `begin_date` AND `end_date`
+          AND #{level}>=`level`
+        ORDER BY discount
+        limit 0,1
+    </select>
+
+
+
+
+    <select id="findGiftByTimeAndAmount" resultMap="PromotionPO">
+        select *
+        from promotion
+        where `kind` = '赠品'
+          AND #{date} BETWEEN `begin_date` AND `end_date`
+          AND #{amount} >= `amount`
+        ORDER BY amount DESC
+        limit 0,1
+    </select>
+
+    <select id="findGiftByTimeAndLevel" resultMap="PromotionPO">
+        select *
+        from promotion
+        where `kind` = '赠品'
+          AND #{date} BETWEEN `begin_date` AND `end_date`
+          AND #{level}>=`level`
+        ORDER BY level DESC
+        limit 0,1
+    </select>
+
+    <delete id="deleteById">
+        delete from promotion where id = #{id}
+    </delete>
+
+    <select id="findAll" resultMap="PromotionPO">
+        select * from promotion
+    </select>
+
+    <resultMap id="PromotionPO" type="com.nju.edu.erp.model.po.sale.PromotionPO">
+        <id column="id" property="id"/>
+        <result column="kind" property="kind"/>
+        <result column="rule" property="rule"/>
+        <result column="level" property="level"/>
+        <result column="amount" property="amount"/>
+        <result column="composition1_id" property="composition1Id"/>
+        <result column="composition2_id" property="composition2Id"/>
+        <result column="begin_date" property="beginDate"/>
+        <result column="end_date" property="endDate"/>
+        <result column="discount" property="discount"/>
+        <result column="voucher" property="voucher"/>
+        <result column="gift_id" property="giftId"/>
+        <result column="gift_quantity" property="giftQuantity"/>
+    </resultMap>
+</mapper>
